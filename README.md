@@ -1,6 +1,6 @@
 # My Python Internship Projects
 
-Welcome! This repository contains the Python projects I am building during my internship. It includes two useful command-line (CLI) tools.
+Welcome! This repository contains the Python projects I am building during my internship. 
 
 ---
 
