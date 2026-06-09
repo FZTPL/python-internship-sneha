@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Article</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Add Article</h1>
+
+<form method="POST">
+
+    <label>Title</label>
+    <input type="text" name="title">
+
+    <br><br>
+
+    <label>Content</label>
+    <textarea name="content"></textarea>
+
+    <br><br>
+
+    <label>Date</label>
+    <input type="date" name="date">
+
+    <br><br>
+
+    <button type="submit">
+        Save
+    </button>
+
+</form>
+
+</body>
+</html>

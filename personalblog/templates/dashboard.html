@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Dashboard</h1>
+
+<a href="/add">Add New Article</a>
+
+<hr>
+
+{% for article in articles %}
+
+<h2>{{ article.title }}</h2>
+
+<p>{{ article.date }}</p>
+
+<a href="/edit/{{ article.id }}">Edit</a>
+<a href="/delete/{{ article.id }}">Delete</a>
+
+<hr>
+
+{% endfor %}
+
+</body>
+</html>

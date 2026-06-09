@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personal Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🌸 Sneha's Personal Blog 🌸</h1>
+
+    {% for article in articles %}
+    <div class="article-card">
+
+        <h2>{{ article.title }}</h2>
+
+        <p>{{ article.date }}</p>
+
+        <a href="/article/{{ article.id }}">
+            Read More
+        </a>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
