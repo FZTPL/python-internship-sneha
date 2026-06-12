@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Length Converter</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#ffd6e7,#ffc2dc);
+        }
+
+        .container{
+            width:90%;
+            max-width:1000px;
+            min-height:75vh;
+            background:white;
+            border-radius:30px;
+            padding:50px;
+            box-shadow:0 10px 30px rgba(255,105,180,0.2);
+            text-align:center;
+        }
+
+        h1{
+            color:#e75480;
+            font-size:3rem;
+            margin-bottom:15px;
+        }
+
+        .subtitle{
+            color:#a64d79;
+            margin-bottom:40px;
+            font-size:1.1rem;
+        }
+
+        .converter-box{
+            display:flex;
+            flex-direction:column;
+            gap:25px;
+            max-width:600px;
+            margin:auto;
+        }
+
+        input, select{
+            padding:15px;
+            border:2px solid #ffb6c1;
+            border-radius:15px;
+            font-size:1rem;
+            outline:none;
+        }
+
+        input:focus,
+        select:focus{
+            border-color:#e75480;
+        }
+
+        button{
+            padding:15px;
+            border:none;
+            border-radius:15px;
+            background:#ff69b4;
+            color:white;
+            font-size:1.1rem;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            transform:scale(1.03);
+        }
+
+        .result{
+            margin-top:30px;
+            font-size:1.3rem;
+            color:#d63384;
+            font-weight:bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎀 Length Converter</h1>
+
+        <p class="subtitle">
+            Convert between different length units easily.
+        </p>
+
+        <form method="post">
+
+            <div class="converter-box">
+
+                <input
+                    type="number"
+                    step="any"
+                    name="value"
+                    placeholder="Enter value"
+                    required
+                >
+
+                <select name="from_unit" required>
+                    <option value="Millimeter">Millimeter</option>
+                    <option value="Centimeter">Centimeter</option>
+                    <option value="Meter">Meter</option>
+                    <option value="Kilometer">Kilometer</option>
+                    <option value="Inch">Inch</option>
+                    <option value="Foot">Foot</option>
+                    <option value="Yard">Yard</option>
+                    <option value="Mile">Mile</option>
+                </select>
+
+                <select name="to_unit" required>
+                    <option value="Millimeter">Millimeter</option>
+                    <option value="Centimeter">Centimeter</option>
+                    <option value="Meter">Meter</option>
+                    <option value="Kilometer">Kilometer</option>
+                    <option value="Inch">Inch</option>
+                    <option value="Foot">Foot</option>
+                    <option value="Yard">Yard</option>
+                    <option value="Mile">Mile</option>
+                </select>
+
+                <button type="submit">
+                    ✨ Convert
+                </button>
+
+            </div>
+
+        </form>
+        
+        <div class="result">
+
+        {% if result %}
+
+            {{ value }} {{ from_unit }}
+            =
+            {{ result }} {{ to_unit }}
+
+        {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
