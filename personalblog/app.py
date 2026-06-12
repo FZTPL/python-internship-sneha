@@ -10,16 +10,11 @@ app.secret_key = "your_secret-key"
 def login():
 
     if request.method == "POST":
-
         username = request.form["username"]
         password = request.form["password"]
-
         if username == "admin" and password == "password123":
-
             session["logged_in"] = True
-
             return redirect(url_for("dashboard"))
-
     return render_template("login.html")
 
 def get_articles():
