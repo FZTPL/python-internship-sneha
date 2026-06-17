@@ -23,7 +23,33 @@ class InterviewResponse(BaseModel):
     score: int | None = None
     class Config:
         from_attributes = True
+    status: str
 
 
 class ScoreUpdate(BaseModel):
     score: int = Field(ge=0, le=100)
+
+class AnswerUpdate(BaseModel):
+    answer:str
+
+
+class EvaluationResponse(BaseModel):
+    score: int
+    feedback: str
+
+class QuestionResponse(BaseModel):
+    id: int
+    interview_id: int
+    question: str
+    answer: str | None
+    feedback: str | None
+    score: int | None
+
+    class Config:
+        from_attributes = True   
+        
+class InterviewSummaryResponse(BaseModel):
+    total_questions: int
+    answered_questions: int
+    average_score: float
+    ai_summary: str
