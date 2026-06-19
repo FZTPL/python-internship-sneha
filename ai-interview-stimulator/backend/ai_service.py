@@ -7,50 +7,20 @@ load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-client = genai.Client(
-    api_key=GEMINI_API_KEY
-)
+client = genai.Client(api_key=GEMINI_API_KEY)
 
-def generate_questions(role: str,difficulty: str,num_questions: int) -> list[str]:
+
+# =========================
+# GENERATE QUESTIONS
+# =========================
+def generate_questions(role: str, difficulty: str, num_questions: int) -> list[str]:
     prompt = f"""
-    Generate {num_questions} interview questions
-    for a {role} position.
-    Difficulty: {difficulty}
-    Return only the questions.
-    One question per line.New questions should start from new line.
-    Do not number the questions.
-    """
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
-    questions_text = response.text
-    questions = questions_text.split("\n")
-    cleaned_questions = []
-    for question in questions:
-        question = question.strip()
-        if question:
-            cleaned_questions.append(question)
-    return cleaned_questions
+Generate {num_questions} interview questions for a {role} position.
+Difficulty: {difficulty}
 
-def evaluate_answer(question: str, answer: str):
-    prompt = f"""
-You are an expert technical interviewer.
-
-Evaluate the user's answer.
-
-Question: {question}
-Answer: {answer}
-
-Return ONLY valid JSON in this format:
-{
-  "score": 0-100,
-  "feedback": "short and clear feedback"
-}
-
-Rules:
-- No extra text
-- Only valid JSON
+Return only questions.
+One question per line.
+No numbering.
 """
 
     response = client.models.generate_content(
@@ -58,14 +28,71 @@ Rules:
         contents=prompt
     )
 
-    data = json.loads(response.text)
+    questions = response.text.split("\n")
 
-    score = data["score"]
-    feedback = data["feedback"]
-
-    return score, feedback
+    return [q.strip() for q in questions if q.strip()]
 
 
+# =========================
+# EVALUATE ANSWER (FIXED)
+# =========================
+import json
+import re
+
+def evaluate_answer(question: str, answer: str):
+
+    prompt = f"""
+You are an expert interviewer.
+
+Return ONLY valid JSON:
+
+{{
+  "score": 0-100,
+  "feedback": "short feedback"
+}}
+
+Question: {question}
+Answer: {answer}
+"""
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
+
+    text = response.text.strip()
+
+    print("RAW GEMINI RESPONSE:", text)
+
+    try:
+        # 🔥 extract JSON safely from messy output
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+
+        if not match:
+            return {
+                "score": 0,
+                "feedback": "AI returned invalid format"
+            }
+
+        data = json.loads(match.group())
+
+        return {
+            "score": int(data.get("score", 0)),
+            "feedback": data.get("feedback", "No feedback")
+        }
+
+    except Exception as e:
+        print("PARSE ERROR:", e)
+
+        return {
+            "score": 0,
+            "feedback": "Evaluation failed due to parsing error"
+        }
+
+
+# =========================
+# SUMMARY (KEEP GEMINI)
+# =========================
 def generate_ai_summary(
     role: str,
     difficulty: str,
@@ -75,24 +102,30 @@ def generate_ai_summary(
     feedback_text: str
 ):
     prompt = f"""
-You are an expert technical interviewer.
-Based on the interview results below, generate a concise overall evaluation.
+You are an expert interviewer.
+
 Role: {role}
 Difficulty: {difficulty}
 Total Questions: {total_questions}
-Answered Questions: {answered_questions}
+Answered: {answered_questions}
 Average Score: {average_score}
-Question Feedbacks:
+
+Feedbacks:
 {feedback_text}
-Write:
-1. Overall performance summary
-2. Key strengths
-3. Areas for improvement
-Keep the response under 150 words.
+
+Give:
+1. Summary
+2. Strengths
+3. Improvements
+
+Keep under 150 words.
 """
+
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt
     )
+
     return response.text
 
+    print("LOADED KEY:", GEMINI_API_KEY[:10])  # prints first 10 chars
